@@ -1,5 +1,6 @@
 package com.hanet.myapplication.model;
 
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -33,17 +34,32 @@ public class CarViewModel extends ViewModel {
                 .setPageSize(10)
                 .build();
 
-        carList = Transformations.switchMap(filterText, input -> {
-            if (input == null || input.equals("") || input.equals("%%")) {
-                return new LivePagedListBuilder<>(
-                        carDao.getCar(), config)
-                        .build();
-            } else {
-                return new LivePagedListBuilder<>(
-                        carDao.getCarByName(input), config)
-                        .build();
-            }
+//        carList = Transformations.switchMap(filterText, input -> {
+//            if (input == null || input.equals("") || input.equals("%%")) {
+//                return new LivePagedListBuilder<>(
+//                        carDao.getCar(), config)
+//                        .build();
+//            } else {
+//                return new LivePagedListBuilder<>(
+//                        carDao.getCarByName(input), config)
+//                        .build();
+//            }
+//
+//        });
 
+        carList = Transformations.switchMap(filterText, new Function<String, LiveData<PagedList<Car>>>() {
+            @Override
+            public LiveData<PagedList<Car>> apply(String input) {
+                if (input == null || input.equals("") || input.equals("%%")) {
+                    return new LivePagedListBuilder<>(
+                            carDao.getCar(), config)
+                            .build();
+                } else {
+                    return new LivePagedListBuilder<>(
+                            carDao.getCarByName(input), config)
+                            .build();
+                }
+            }
         });
 
     }

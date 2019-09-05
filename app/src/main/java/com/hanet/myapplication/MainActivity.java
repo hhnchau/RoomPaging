@@ -98,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
+    void deleteCar(String name){
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                appDatabase.carDao().deleteCar(name);
+                return null;
+            }
+        }.execute();
+    }
+
     public void onSearch(View view) {
 //        long time = System.currentTimeMillis();
 //        start.setText(time + "");
@@ -105,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.filterText.setValue("%" + text.getText().toString() + "%");
 
+        //deleteCar(text.getText().toString());
 
     }
 }
